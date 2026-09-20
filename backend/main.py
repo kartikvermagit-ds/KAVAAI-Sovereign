@@ -34,12 +34,12 @@ FRONTEND_DIR = os.path.join(ROOT_DIR, "frontend")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(WORKSPACE_OUTPUT_DIR, exist_ok=True)
 
-# Check if running in cloud gateway / deployment mode
+# Check if running in cloud gateway / deployment mode (Render / Cloud)
 IS_CLOUD_DEPLOYMENT = (
     os.environ.get("RENDER") is not None or
     os.environ.get("NETWORK_MODE") == "CLOUD_API_GATEWAY" or
     os.environ.get("KAVAAI_DEPLOYMENT_MODE") == "CLOUD_PUBLIC" or
-    "PORT" in os.environ
+    os.environ.get("FLASK_ENV") == "production"
 )
 
 def get_orchestrator():
@@ -90,17 +90,39 @@ def add_security_headers(response):
 
 
 # ==============================================================================
-# STATIC FRONTEND SERVING (Direct Workbench Access at http://127.0.0.1:8000/)
+# ROUTING: API GATEWAY (CLOUD) VS LOCAL WORKBENCH (DESKTOP)
 # ==============================================================================
 @app.route("/", methods=["GET"])
 def index():
-    """Serves the primary Industrial AI Workbench UI."""
+    """
+    On Render (Cloud API Gateway), returns service status JSON.
+    On Local Sovereign Desktop (127.0.0.1:8000), serves the local UI.
+    """
+    if IS_CLOUD_DEPLOYMENT:
+        return jsonify({
+            "service": "KAVAAI Sovereign API Gateway",
+            "version": "1.0.0",
+            "status": "ONLINE",
+            "network_mode": "CLOUD_API_GATEWAY",
+            "endpoints": {
+                "system_status": "/api/system/status",
+                "auth_config": "/api/auth/config",
+                "investigate": "/investigate",
+                "orchestrate": "/api/orchestrate"
+            },
+            "frontend": "Hosted on Vercel"
+        }), 200
     return send_from_directory(FRONTEND_DIR, "index.html")
 
 
 @app.route("/<path:path>", methods=["GET"])
 def serve_static(path):
-    """Serves static frontend assets (css, js, images)."""
+    """Serves static frontend assets for local desktop workbench."""
+    if IS_CLOUD_DEPLOYMENT:
+        return jsonify({
+            "error": "Not Found",
+            "message": f"Resource '{path}' is not hosted on Render. Access the frontend via your Vercel deployment."
+        }), 404
     fpath = os.path.join(FRONTEND_DIR, path)
     if os.path.exists(fpath) and os.path.isfile(fpath):
         return send_from_directory(FRONTEND_DIR, path)
