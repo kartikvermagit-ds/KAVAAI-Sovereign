@@ -34,7 +34,19 @@ FRONTEND_DIR = os.path.join(ROOT_DIR, "frontend")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(WORKSPACE_OUTPUT_DIR, exist_ok=True)
 
-from agent_orchestrator import orchestrator
+# Check if running in cloud gateway / deployment mode
+IS_CLOUD_DEPLOYMENT = (
+    os.environ.get("RENDER") is not None or
+    os.environ.get("NETWORK_MODE") == "CLOUD_API_GATEWAY" or
+    os.environ.get("KAVAAI_DEPLOYMENT_MODE") == "CLOUD_PUBLIC" or
+    "PORT" in os.environ
+)
+
+def get_orchestrator():
+    """Lazily loads orchestrator to avoid blocking server boot with heavy ML imports."""
+    from agent_orchestrator import orchestrator
+    return orchestrator
+
 from model_router import (
     check_local_model_availability,
     get_routing_history,
@@ -43,17 +55,21 @@ from model_router import (
     DEFAULT_ROLES
 )
 
-# Auto-seed vector database if needed on startup
-try:
-    from index_document import seed_database
-    seed_database()
-except Exception as e:
-    print(f"[Warning] Auto-seeding vector database encountered: {e}")
+# Auto-seed vector database if needed on startup (local sovereign node only)
+if not IS_CLOUD_DEPLOYMENT and os.environ.get("SKIP_AUTO_SEED", "false").lower() != "true":
+    try:
+        from index_document import seed_database
+        seed_database()
+    except Exception as e:
+        print(f"[Warning] Auto-seeding vector database encountered: {e}")
 
 from sovereignty_monitor import sovereignty_monitor
-# Install active application-level outbound guard
+# Install active application-level outbound guard (strict airgap on local node, monitoring on cloud)
 strict_airgap = os.environ.get("AIR_GAP_STRICT_MODE", "true").lower() == "true"
-sovereignty_monitor.install_outbound_guard(strict=strict_airgap)
+if not IS_CLOUD_DEPLOYMENT and strict_airgap:
+    sovereignty_monitor.install_outbound_guard(strict=True)
+else:
+    sovereignty_monitor.install_outbound_guard(strict=False)
 
 app = Flask(__name__, static_folder=FRONTEND_DIR)
 
@@ -109,7 +125,8 @@ def investigate():
 
     try:
         # Execute agentic orchestrator directly in-process for speed and reliability
-        res = orchestrator.execute(
+        orch = get_orchestrator()
+        res = orch.execute(
             user_request=question,
             context=data,
             generate_deliverables=True,
@@ -160,7 +177,8 @@ def orchestrate_task():
         return jsonify({"error": "Task prompt is required."}), 400
 
     try:
-        res = orchestrator.execute(
+        orch = get_orchestrator()
+        res = orch.execute(
             user_request=task_prompt,
             context=context,
             generate_deliverables=generate_deliverables,

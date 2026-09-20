@@ -10,7 +10,7 @@ services:
     region: oregon
     plan: free
     buildCommand: pip install --upgrade pip && pip install -r requirements.txt
-    startCommand: gunicorn -b 0.0.0.0:$PORT backend.main:app
+    startCommand: gunicorn -w 1 --timeout 120 -b 0.0.0.0:$PORT backend.main:app
     healthCheckPath: /api/system/status
     envVars:
       - key: PORT
@@ -19,8 +19,12 @@ services:
         value: 0.0.0.0
       - key: KAVAAI_DEPLOYMENT_MODE
         value: CLOUD_PUBLIC
+      - key: NETWORK_MODE
+        value: CLOUD_API_GATEWAY
+      - key: SKIP_AUTO_SEED
+        value: "true"
       - key: AIR_GAP_STRICT_MODE
-        value: false
+        value: "false"
       - key: CORS_ORIGINS
         sync: false
       - key: SUPABASE_URL
