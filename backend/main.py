@@ -73,12 +73,13 @@ else:
 
 app = Flask(__name__, static_folder=FRONTEND_DIR)
 
-# Configure CORS using environment variable with secure local + Vercel defaults
+# Configure CORS using environment variable with secure local, Netlify & Vercel defaults
 cors_origins_env = os.environ.get(
     "CORS_ORIGINS", 
     "http://127.0.0.1:8000 http://localhost:8000 http://127.0.0.1:5500 http://localhost:5500 http://localhost:5173"
 )
-cors_origins = [o.strip() for o in cors_origins_env.split() if o.strip()]
+# Support comma-separated or space-separated origins
+cors_origins = [o.strip() for o in cors_origins_env.replace(",", " ").split() if o.strip()]
 CORS(app, resources={r"/*": {"origins": cors_origins if cors_origins else "*"}})
 
 @app.after_request

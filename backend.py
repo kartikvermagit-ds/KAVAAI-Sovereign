@@ -13,7 +13,8 @@ app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024
 
 # SECURITY: Configure CORS using environment variable for production safety
 origins_str = os.environ.get("CORS_ORIGINS", "http://127.0.0.1:5500 http://localhost:5500")
-CORS(app, resources={r"/*": {"origins": origins_str.split()}})
+origins_list = [o.strip() for o in origins_str.replace(",", " ").split() if o.strip()]
+CORS(app, resources={r"/*": {"origins": origins_list if origins_list else "*"}})
 
 @app.after_request
 def add_security_headers(response):

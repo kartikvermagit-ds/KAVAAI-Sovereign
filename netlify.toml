@@ -1,0 +1,29 @@
+# ==============================================================================
+# KAVAAI SOVEREIGN — NETLIFY DEPLOYMENT CONFIGURATION
+# Optimized for zero-VPN high-speed accessibility across all ISPs (Jio, Airtel, Vi)
+# ==============================================================================
+
+[build]
+  publish = "frontend"
+  # Pure static frontend; no build command required
+
+# Single Page Application SPA Redirects (routes /login, /signup, /app to index.html)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security & CORS Response Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Access-Control-Allow-Origin = "*"
+
+# Immutable Cache for Static Media & Assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
