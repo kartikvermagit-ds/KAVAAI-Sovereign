@@ -1,0 +1,34 @@
+# Ignore Python backend and serverless scanners on Vercel
+*.py
+app.py
+backend.py
+model_router.py
+agent_orchestrator.py
+investigation.py
+index_document.py
+sovereignty_monitor.py
+tool_system.py
+tools.py
+agent.py
+agent_workflow.py
+document_intelligence.py
+deliverable_generator.py
+
+# Directories
+backend/
+scripts/
+tests/
+chroma_db/
+knowledge_base/
+output/
+workspace/
+.pytest_cache/
+__pycache__/
+
+# Dependencies & Containers
+requirements.txt
+Dockerfile
+docker-compose.yml
+render.yaml
+pytest.ini
+.env*
