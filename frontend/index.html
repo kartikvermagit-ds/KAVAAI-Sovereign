@@ -86,6 +86,16 @@
                 </p>
             </div>
 
+            <!-- Industrial Mode Switcher: Sign In vs Sign Up -->
+            <div class="auth-mode-switch" role="tablist">
+                <button type="button" class="auth-mode-btn active" id="authModeSignIn" role="tab" aria-selected="true">
+                    SIGN IN
+                </button>
+                <button type="button" class="auth-mode-btn" id="authModeSignUp" role="tab" aria-selected="false">
+                    CREATE ACCOUNT
+                </button>
+            </div>
+
             <!-- Mapped Error Banner -->
             <div class="auth-error-banner" id="authErrorBanner" role="alert">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#FF4D4F" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -131,20 +141,43 @@
                     </div>
                 </div>
 
+                <!-- Confirm Password Field (Only shown in Sign Up mode) -->
+                <div class="auth-input-group auth-signup-field" id="authConfirmPasswordGroup" style="display: none;">
+                    <div class="auth-input-header">
+                        <label class="auth-input-label" for="authConfirmPassword">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            CONFIRM PASSCODE
+                        </label>
+                        <span class="auth-input-status" id="authConfirmStatus">REQUIRED</span>
+                    </div>
+                    <div class="auth-input-wrap">
+                        <input type="password" id="authConfirmPassword" class="auth-input" placeholder="Re-enter workstation access key" autocomplete="new-password">
+                        <span class="auth-input-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-2-2l2 2"/><path d="M15.5 7.5L14 9"/><path d="M3 21l9-9"/><circle cx="15.5" cy="8.5" r="4.5"/></svg>
+                        </span>
+                    </div>
+                </div>
+
                 <!-- Auxiliary Row: Remember Node & Recover Access -->
                 <div class="auth-aux-row">
                     <label class="auth-checkbox-label">
                         <input type="checkbox" id="authRemember" class="auth-checkbox" checked>
                         <span>REMEMBER THIS NODE</span>
                     </label>
-                    <a href="javascript:void(0)" class="auth-link-recover" onclick="alert('Contact Station Security Administrator to reset Local Node Credentials.')">RECOVER ACCESS</a>
+                    <a href="javascript:void(0)" class="auth-link-recover" id="authLinkRecover" onclick="alert('Contact Station Security Administrator to reset Local Node Credentials.')">RECOVER ACCESS</a>
                 </div>
 
-                <!-- Primary CTA: Authenticate Operator (Multi-stage) -->
+                <!-- Primary CTA: Authenticate Operator / Create Account -->
                 <button type="submit" class="btn-auth-primary magnetic-target" id="btnAuthenticate">
                     <span class="auth-btn-spinner"></span>
                     <span id="btnAuthText">AUTHENTICATE OPERATOR</span>
                 </button>
+
+                <!-- Toggle Prompt Link: Sign In <-> Sign Up -->
+                <div class="auth-switch-row">
+                    <span id="authSwitchPrompt">Need a new operator account?</span>
+                    <a href="javascript:void(0)" class="auth-switch-link" id="authSwitchLink">CREATE ACCOUNT</a>
+                </div>
 
                 <!-- Secondary CTA: Continue With Local Node (Air-Gapped Offline Bypass) -->
                 <button type="button" class="btn-auth-secondary magnetic-target" id="btnContinueLocal" title="Air-gapped on-premise fallback without cloud auth">

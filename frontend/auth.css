@@ -751,25 +751,101 @@
 }
 
 /* --------------------------------------------------------------------------
-   10. RESPONSIVE OPTIMIZATIONS
+   11. AUTH MODE SWITCHER (SIGN IN VS CREATE ACCOUNT)
    -------------------------------------------------------------------------- */
-@media (max-width: 600px) {
-    .auth-console-card {
-        padding: 26px 20px 22px 20px;
-        border-radius: 14px;
+.auth-mode-switch {
+    display: flex;
+    background: rgba(5, 12, 22, 0.85);
+    border: 1px solid var(--auth-blue-border);
+    border-radius: 10px;
+    padding: 3px;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.auth-mode-btn {
+    flex: 1;
+    height: 36px;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    color: var(--auth-text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-mode-btn:hover {
+    color: var(--auth-text-primary);
+    background: rgba(21, 151, 255, 0.08);
+}
+
+.auth-mode-btn.active {
+    background: linear-gradient(180deg, #10243E 0%, #08162A 100%);
+    color: #FFFFFF;
+    border: 1px solid var(--auth-orange-action);
+    box-shadow: 0 0 12px rgba(255, 138, 0, 0.25);
+    text-shadow: 0 0 8px rgba(255, 138, 0, 0.4);
+}
+
+/* Sign Up Only Fields Animation */
+.auth-signup-field {
+    animation: auth-field-slide-down 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes auth-field-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
     }
-    .auth-floating-coords {
-        display: none;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .auth-scanline,
-    .auth-logo-scan,
-    .auth-pulse-dot {
-        animation: none !important;
-    }
-    .btn-auth-primary::before {
-        display: none !important;
-    }
+/* Mode Switch Prompt Link Row */
+.auth-switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--auth-text-muted);
+    font-family: 'Inter', sans-serif;
+    margin-top: -4px;
 }
+
+.auth-switch-link {
+    color: var(--auth-orange-action);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+
+.auth-switch-link:hover {
+    color: var(--auth-orange-bright);
+    text-shadow: 0 0 10px rgba(255, 138, 0, 0.6);
+}
+
+/* Success Banner State for Account Confirmation Notice */
+.auth-error-banner.success {
+    background: rgba(82, 196, 26, 0.12);
+    border-color: rgba(82, 196, 26, 0.4);
+    color: #95DE64;
+}
+
+.auth-error-banner.success svg {
+    stroke: #52C41A;
+}
+

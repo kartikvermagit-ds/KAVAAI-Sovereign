@@ -24,7 +24,56 @@ document.addEventListener("DOMContentLoaded", async function() {
     const authStatusDot = document.getElementById("authStatusAuthDot");
     const authStatusLabel = document.getElementById("authStatusAuthLabel");
 
+    // Mode Switcher Elements
+    const tabSignIn = document.getElementById("authModeSignIn");
+    const tabSignUp = document.getElementById("authModeSignUp");
+    const confirmPwdGroup = document.getElementById("authConfirmPasswordGroup");
+    const confirmPwdInput = document.getElementById("authConfirmPassword");
+    const switchPrompt = document.getElementById("authSwitchPrompt");
+    const switchLink = document.getElementById("authSwitchLink");
+    const linkRecover = document.getElementById("authLinkRecover");
+
+    let currentMode = "SIGN_IN"; // "SIGN_IN" or "SIGN_UP"
+
     if (!authScreen) return;
+
+    // Mode Switch Handler
+    function setAuthMode(mode) {
+        currentMode = mode;
+        hideError();
+
+        if (mode === "SIGN_UP") {
+            if (tabSignIn) tabSignIn.classList.remove("active");
+            if (tabSignUp) tabSignUp.classList.add("active");
+            if (confirmPwdGroup) {
+                confirmPwdGroup.style.display = "flex";
+                if (confirmPwdInput) confirmPwdInput.required = true;
+            }
+            if (btnAuthText) btnAuthText.textContent = "CREATE OPERATOR ACCOUNT";
+            if (switchPrompt) switchPrompt.textContent = "Already registered on this node?";
+            if (switchLink) switchLink.textContent = "SIGN IN TO STATION";
+            if (linkRecover) linkRecover.style.display = "none";
+        } else {
+            if (tabSignUp) tabSignUp.classList.remove("active");
+            if (tabSignIn) tabSignIn.classList.add("active");
+            if (confirmPwdGroup) {
+                confirmPwdGroup.style.display = "none";
+                if (confirmPwdInput) confirmPwdInput.required = false;
+            }
+            if (btnAuthText) btnAuthText.textContent = "AUTHENTICATE OPERATOR";
+            if (switchPrompt) switchPrompt.textContent = "Need a new operator account?";
+            if (switchLink) switchLink.textContent = "CREATE ACCOUNT";
+            if (linkRecover) linkRecover.style.display = "inline";
+        }
+    }
+
+    if (tabSignIn) tabSignIn.addEventListener("click", () => setAuthMode("SIGN_IN"));
+    if (tabSignUp) tabSignUp.addEventListener("click", () => setAuthMode("SIGN_UP"));
+    if (switchLink) {
+        switchLink.addEventListener("click", () => {
+            setAuthMode(currentMode === "SIGN_IN" ? "SIGN_UP" : "SIGN_IN");
+        });
+    }
 
     // Initialize Supabase & Session Client
     if (window.KavaaiAuth) {
@@ -97,6 +146,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     function showError(msg) {
         if (errorBanner && errorText) {
+            errorBanner.classList.remove("success");
             errorText.textContent = msg;
             errorBanner.classList.add("visible");
             if (window.SoundManager && window.SoundManager.error) {
@@ -105,9 +155,20 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
     }
 
+    function showSuccess(msg) {
+        if (errorBanner && errorText) {
+            errorBanner.classList.add("success");
+            errorText.textContent = msg;
+            errorBanner.classList.add("visible");
+            if (window.SoundManager && window.SoundManager.success) {
+                window.SoundManager.success();
+            }
+        }
+    }
+
     function hideError() {
         if (errorBanner) {
-            errorBanner.classList.remove("visible");
+            errorBanner.classList.remove("visible", "success");
         }
     }
 
@@ -124,7 +185,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         try {
             // Stage 1: Simulating cryptographic local handshake
             await new Promise(r => setTimeout(r, 380));
-            setButtonState("loading", "VERIFYING LOCAL NODE...");
+            setButtonState("loading", "VERIFYING CREDENTIALS...");
 
             // Stage 2: Supabase Auth or Air-Gapped Local Auth
             const result = await window.KavaaiAuth.signIn(email, password, remember);
@@ -147,6 +208,40 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
     }
 
+    async function executeRegistration(email, password, remember) {
+        if (!window.KavaaiAuth) return;
+
+        hideError();
+        setButtonState("loading", "CREATING ACCOUNT...");
+        if (window.SoundManager) window.SoundManager.click();
+
+        try {
+            await new Promise(r => setTimeout(r, 380));
+            setButtonState("loading", "REGISTERING OPERATOR...");
+
+            const result = await window.KavaaiAuth.signUp(email, password);
+
+            if (result.requiresConfirmation) {
+                setButtonState("normal", "CREATE OPERATOR ACCOUNT");
+                showSuccess(result.message || "REGISTRATION SUCCESSFUL: Please check your email to verify.");
+                return;
+            }
+
+            setButtonState("granted", "ACCOUNT CREATED");
+            if (window.SoundManager && window.SoundManager.success) {
+                window.SoundManager.success();
+            }
+
+            setTimeout(() => {
+                unlockSystem(true, result.user);
+            }, 550);
+
+        } catch (err) {
+            setButtonState("normal", "CREATE OPERATOR ACCOUNT");
+            showError(err.message || "REGISTRATION FAILED: Account could not be created.");
+        }
+    }
+
     function setButtonState(state, text) {
         if (!btnAuthenticate || !btnAuthText) return;
 
@@ -166,20 +261,31 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
     }
 
-    // Primary Form Submit
+    // Primary Form Submit (Handles both Sign In and Sign Up)
     if (authForm) {
         authForm.addEventListener("submit", (e) => {
             e.preventDefault();
-            const email = emailInput ? emailInput.value : "";
+            const email = emailInput ? emailInput.value.trim() : "";
             const password = passwordInput ? passwordInput.value : "";
             const remember = rememberCheckbox ? rememberCheckbox.checked : true;
-            executeAuthentication(email, password, remember);
+
+            if (currentMode === "SIGN_UP") {
+                const confirmPassword = confirmPwdInput ? confirmPwdInput.value : "";
+                if (password !== confirmPassword) {
+                    showError("PASSCODES DO NOT MATCH: Please enter identical security keys.");
+                    return;
+                }
+                executeRegistration(email, password, remember);
+            } else {
+                executeAuthentication(email, password, remember);
+            }
         });
     }
 
     // Secondary CTA: Continue With Local Node
     if (btnContinueLocal) {
         btnContinueLocal.addEventListener("click", async () => {
+            setAuthMode("SIGN_IN");
             if (emailInput) emailInput.value = "operator";
             if (passwordInput) passwordInput.value = "kavaai2026";
             executeAuthentication("operator", "kavaai2026", true);

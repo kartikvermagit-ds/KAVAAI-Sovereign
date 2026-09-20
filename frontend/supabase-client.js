@@ -228,6 +228,61 @@ const KavaaiAuth = (function() {
     }
 
     /**
+     * Register / Sign Up a new Operator via Supabase
+     */
+    async function signUp(email, password, fullName = "") {
+        if (!email || !password) {
+            throw new Error("Operator ID / Email and Password are required.");
+        }
+        if (password.length < 6) {
+            throw new Error("ACCESS RESTRICTED: Password must be at least 6 characters.");
+        }
+
+        if (client && authConfig.isConfigured) {
+            const cleanEmail = email.trim();
+            const { data, error } = await client.auth.signUp({
+                email: cleanEmail,
+                password: password,
+                options: {
+                    data: {
+                        full_name: fullName || cleanEmail.split("@")[0],
+                        role: "OPERATOR",
+                        node: "KS-LOCAL-01"
+                    }
+                }
+            });
+
+            if (error) {
+                await logAuditEvent(null, "SIGNUP_FAILED");
+                throw new Error(mapAuthError(error));
+            }
+
+            if (data.user && !data.session) {
+                await logAuditEvent(data.user.id, "SIGNUP_CONFIRMATION_PENDING");
+                return {
+                    user: data.user,
+                    session: null,
+                    requiresConfirmation: true,
+                    message: "REGISTRATION SUCCESSFUL: Verification email sent. Please confirm your email."
+                };
+            }
+
+            currentSession = data.session;
+            await logAuditEvent(data.user ? data.user.id : null, "SIGNUP_SUCCESS");
+            return {
+                user: data.user,
+                session: data.session,
+                role: "OPERATOR",
+                node: "KS-LOCAL-01",
+                isLocalNode: false
+            };
+        }
+
+        // Local Node Fallback (Air-Gapped Sovereign On-Premise Mode)
+        return signIn(email, password, true);
+    }
+
+    /**
      * Continue with Local Node (Fast One-Click Air-Gapped Access)
      */
     async function signInLocalNode() {
@@ -258,6 +313,7 @@ const KavaaiAuth = (function() {
         init,
         getSession,
         signIn,
+        signUp,
         signInLocalNode,
         signOut,
         mapAuthError,
