@@ -35,7 +35,32 @@ document.addEventListener("DOMContentLoaded", async function() {
 
     let currentMode = "SIGN_IN"; // "SIGN_IN" or "SIGN_UP"
 
+    // Cinematic Authenticate Sound Effect (diamond_tunes-cinematic-sound-effect-327618)
+    const cinematicAuthSound = new Audio("diamond_tunes-cinematic-sound-effect-327618.mp3");
+    cinematicAuthSound.preload = "auto";
+
+    function playCinematicAuthSound() {
+        try {
+            cinematicAuthSound.currentTime = 0;
+            const playPromise = cinematicAuthSound.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(err => {
+                    console.log("[Audio] Cinematic sound playback deferred or muted:", err);
+                });
+            }
+        } catch (e) {
+            console.warn("[Audio] Could not play cinematic sound:", e);
+        }
+    }
+
     if (!authScreen) return;
+
+    // Direct click trigger on Authenticate Operator button
+    if (btnAuthenticate) {
+        btnAuthenticate.addEventListener("click", () => {
+            playCinematicAuthSound();
+        });
+    }
 
     // Mode Switch Handler
     function setAuthMode(mode) {
@@ -179,6 +204,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         if (!window.KavaaiAuth) return;
 
         hideError();
+        playCinematicAuthSound();
         setButtonState("loading", "AUTHENTICATING...");
         if (window.SoundManager) window.SoundManager.click();
 
