@@ -92,11 +92,27 @@ document.addEventListener("DOMContentLoaded", async function() {
         }
     }
 
-    if (tabSignIn) tabSignIn.addEventListener("click", () => setAuthMode("SIGN_IN"));
-    if (tabSignUp) tabSignUp.addEventListener("click", () => setAuthMode("SIGN_UP"));
+    window.setAuthMode = setAuthMode;
+
+    if (tabSignIn) tabSignIn.addEventListener("click", () => {
+        setAuthMode("SIGN_IN");
+        if (window.KavaaiRouter && window.KavaaiRouter.currentRoute !== "/login") {
+            window.KavaaiRouter.navigate("/login");
+        }
+    });
+    if (tabSignUp) tabSignUp.addEventListener("click", () => {
+        setAuthMode("SIGN_UP");
+        if (window.KavaaiRouter && window.KavaaiRouter.currentRoute !== "/signup") {
+            window.KavaaiRouter.navigate("/signup");
+        }
+    });
     if (switchLink) {
         switchLink.addEventListener("click", () => {
-            setAuthMode(currentMode === "SIGN_IN" ? "SIGN_UP" : "SIGN_IN");
+            const nextMode = currentMode === "SIGN_IN" ? "SIGN_UP" : "SIGN_IN";
+            setAuthMode(nextMode);
+            if (window.KavaaiRouter) {
+                window.KavaaiRouter.navigate(nextMode === "SIGN_UP" ? "/signup" : "/login");
+            }
         });
     }
 
@@ -105,15 +121,32 @@ document.addEventListener("DOMContentLoaded", async function() {
         await window.KavaaiAuth.init();
         const existingSession = await window.KavaaiAuth.getSession();
         
+        const path = window.location.pathname.toLowerCase();
+        const hash = window.location.hash.toLowerCase();
+        const search = window.location.search.toLowerCase();
+        const isAuthRoute = path.includes('/login') || path.includes('/signup') || 
+                            hash.includes('login') || hash.includes('signup') ||
+                            search.includes('login') || search.includes('signup');
+        const isAppRoute = path.includes('/app') || hash.includes('app') || search.includes('app');
+
         if (existingSession) {
-            // Already authenticated -> Fast Unlock directly into dashboard
-            unlockSystem(false);
+            // Already authenticated
+            if (isAppRoute) {
+                unlockSystem(false);
+            } else if (isAuthRoute) {
+                unlockSystem(false);
+            }
         } else {
-            // Unauthenticated -> Lock dashboard and present login console
+            // Unauthenticated
             if (dashboardWrapper) {
                 dashboardWrapper.classList.add("auth-locked");
             }
-            authScreen.classList.remove("auth-hidden");
+            if (isAuthRoute) {
+                authScreen.classList.remove("auth-hidden");
+                setAuthMode(path.includes('/signup') || hash.includes('signup') ? "SIGN_UP" : "SIGN_IN");
+            } else {
+                authScreen.classList.add("auth-hidden");
+            }
         }
 
         // Update auth service status dot in the console strip
@@ -340,6 +373,9 @@ document.addEventListener("DOMContentLoaded", async function() {
                 dashboardWrapper.classList.remove("auth-locked");
                 dashboardWrapper.style.opacity = "1";
             }
+            if (window.KavaaiRouter && window.KavaaiRouter.currentRoute !== "/app") {
+                window.KavaaiRouter.navigate('/app');
+            }
             return;
         }
 
@@ -355,6 +391,9 @@ document.addEventListener("DOMContentLoaded", async function() {
             if (dashboardWrapper) {
                 dashboardWrapper.classList.remove("auth-locked");
                 dashboardWrapper.style.opacity = "1";
+            }
+            if (window.KavaaiRouter && window.KavaaiRouter.currentRoute !== "/app") {
+                window.KavaaiRouter.navigate('/app');
             }
         }, 400);
 
@@ -409,7 +448,9 @@ document.addEventListener("DOMContentLoaded", async function() {
             if (dashboardWrapper) {
                 dashboardWrapper.classList.add("auth-locked");
             }
-            if (authScreen) {
+            if (window.KavaaiRouter) {
+                window.KavaaiRouter.navigate('/');
+            } else if (authScreen) {
                 authScreen.classList.remove("auth-hidden");
             }
             if (window.SoundManager) window.SoundManager.click();

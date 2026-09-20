@@ -281,9 +281,17 @@ document.addEventListener("DOMContentLoaded", function () {
         toast.className = `crystal-toast ${type}`;
         
         let iconColor = "var(--blue-bright)";
-        if (type === "success") iconColor = "var(--success)";
-        else if (type === "error") iconColor = "var(--danger)";
-        else if (type === "warning") iconColor = "var(--warning)";
+        let icon = "◈";
+        if (type === "success") {
+            iconColor = "var(--success)";
+            icon = "✓";
+        } else if (type === "error") {
+            iconColor = "var(--danger)";
+            icon = "✕";
+        } else if (type === "warning") {
+            iconColor = "var(--warning)";
+            icon = "⚠";
+        }
 
         toast.innerHTML = `<span style="color:${iconColor}; font-weight:700;">${icon}</span> <span>${escapeHTML(message)}</span>`;
         container.appendChild(toast);

@@ -8,8 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=58">
-    <link rel="stylesheet" href="auth.css?v=1">
+    <link rel="stylesheet" href="style.css?v=60">
+    <link rel="stylesheet" href="auth.css?v=2">
+    <link rel="stylesheet" href="landing.css?v=7">
     <!-- Supabase JS Client (With graceful offline fallback in supabase-client.js) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -30,9 +31,546 @@
 <div class="auth-unlock-laser" id="authUnlockLaser"></div>
 
 <!-- ======================================================================== -->
+<!-- KAVAAI SOVEREIGN — PREMIUM INDUSTRIAL AI LANDING PAGE                     -->
+<!-- Visual Target: Command Platform • Aerospace Interface • Dark Cinematic    -->
+<!-- ======================================================================== -->
+<section id="kavaai-landing-page" aria-label="KAVAAI Sovereign Industrial Landing Page">
+    <!-- Atmospheric Background Layers -->
+    <div class="lp-grid-overlay" aria-hidden="true"></div>
+    <div class="lp-ambient-vignette" aria-hidden="true"></div>
+
+    <!-- 1. TOP NAVIGATION BAR -->
+    <header class="lp-header" id="lp-navbar">
+        <div class="lp-container lp-nav-inner">
+            <!-- Left: Brand Logo & Title -->
+            <a href="#lp-hero" class="lp-brand-link">
+                <div class="lp-brand-emblem">
+                    <span class="lp-brand-emblem-k">K</span>
+                </div>
+                <div class="lp-brand-text">
+                    <div class="lp-brand-title">KAVAAI <span>SOVEREIGN</span></div>
+                    <div class="lp-brand-sub">INDUSTRIAL AI WORKBENCH</div>
+                </div>
+            </a>
+
+            <!-- Center: Navigation Links -->
+            <nav>
+                <ul class="lp-nav-menu">
+                    <li><a href="#lp-hero" class="lp-nav-link active">Home</a></li>
+                    <li><a href="#lp-capabilities" class="lp-nav-link">Features</a></li>
+                    <li><a href="#lp-critical" class="lp-nav-link">Solutions</a></li>
+                    <li><a href="#lp-advantages" class="lp-nav-link">Technology</a></li>
+                    <li><a href="#lp-advantages" class="lp-nav-link">Security</a></li>
+                    <li><a href="#lp-team" class="lp-nav-link">About</a></li>
+                    <li><a href="#lp-footer" class="lp-nav-link">Contact</a></li>
+                </ul>
+            </nav>
+
+            <!-- Right: Action Buttons -->
+            <div class="lp-nav-actions">
+                <button type="button" class="lp-btn-signin" data-route="/login">Sign In</button>
+                <button type="button" class="lp-btn-signup" data-route="/signup">Create Account</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. INDUSTRIAL HERO SECTION -->
+    <section class="lp-hero-section" id="lp-hero">
+        <!-- Refinery Background & Darkness Overlay -->
+        <div class="lp-hero-bg" aria-hidden="true"></div>
+        <div class="lp-hero-overlay" aria-hidden="true"></div>
+
+        <!-- Dedicated Decorative HUD Layer (Never interferes with functional UI) -->
+        <div class="hero-hud" aria-hidden="true">
+            <div class="lp-hud-coords lp-bracket-box">
+                <div>LAT 28.6139&deg; N</div>
+                <div>LON 77.2090&deg; E</div>
+                <div><span>SITE: REFINERY-01</span></div>
+            </div>
+            <div class="lp-hud-actions lp-bracket-box">
+                <div>[SYS] KAVAAI SOVEREIGN v1.0 &bull; INDUSTRIAL AI WORKBENCH</div>
+            </div>
+        </div>
+
+        <div class="lp-container">
+            <div class="hero-content">
+                <!-- Left Side Content -->
+                <div class="lp-hero-left">
+                <div class="lp-hero-eyebrow">
+                    <span class="lp-hero-eyebrow-line"></span>
+                    <span>SOVEREIGN AI. REAL IMPACT.</span>
+                </div>
+
+                <h1 class="lp-hero-title">
+                    <span class="title-kavaai">KAVAAI</span>
+                    <span class="title-sovereign">SOVEREIGN</span>
+                </h1>
+
+                <div class="lp-hero-subtitle">
+                    On-Premise AI for Industrial Intelligence
+                </div>
+
+                <p class="lp-hero-desc">
+                    <strong>Analyze. Investigate. Automate. Secure.</strong><br>
+                    A sovereign AI workbench for critical infrastructure, industrial inspection, and sensitive operations.
+                </p>
+
+                <!-- Hero CTA Buttons -->
+                <div class="lp-hero-ctas">
+                    <button type="button" class="lp-btn-primary" data-route="/signup">
+                        <span>&rarr;</span>
+                        <span>Get Started</span>
+                    </button>
+                    <button type="button" class="lp-btn-secondary" id="lp-btn-watch-demo">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <span>Watch Demo</span>
+                    </button>
+                </div>
+
+                <!-- Technical Status Strip -->
+                <div class="lp-hero-chips">
+                    <div class="lp-chip">
+                        <span class="lp-chip-icon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                        </span>
+                        <span>ON-PREMISE</span>
+                    </div>
+                    <div class="lp-chip">
+                        <span class="lp-chip-icon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        </span>
+                        <span>AIR-GAP READY</span>
+                    </div>
+                    <div class="lp-chip">
+                        <span class="lp-chip-icon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5l14 14"/><path d="M11 20H4a4 4 0 0 1-2.6-7"/></svg>
+                        </span>
+                        <span>ZERO CLOUD AI</span>
+                    </div>
+                    <div class="lp-chip">
+                        <span class="lp-chip-icon">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </span>
+                        <span>YOUR DATA. YOUR CONTROL.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Floating Dark Glass & 3D Glowing Globe Panel -->
+            <div class="lp-hero-right">
+                <div class="lp-globe-card lp-bracket-box">
+                    <div class="lp-globe-header">
+                        <div class="lp-globe-heading">
+                            LOCAL AI
+                            <span>GLOBAL IMPACT</span>
+                        </div>
+                        <ul class="lp-globe-list">
+                            <li>Your Data</li>
+                            <li>Your Infrastructure</li>
+                            <li>Your Control</li>
+                            <li>Real Outcomes</li>
+                        </ul>
+                    </div>
+
+                    <!-- 3D Digital Rotating Earth Canvas -->
+                    <div class="lp-globe-viewport">
+                        <canvas id="landing-globe-canvas"></canvas>
+                    </div>
+
+                    <!-- 3 System Metrics (Positioning Principles) -->
+                    <div class="lp-metrics-row">
+                        <div class="lp-metric-item">
+                            <span class="lp-metric-value">0</span>
+                            <span class="lp-metric-label">Cloud AI Dependency</span>
+                        </div>
+                        <div class="lp-metric-item">
+                            <span class="lp-metric-value">100%</span>
+                            <span class="lp-metric-label">Data Sovereignty</span>
+                        </div>
+                        <div class="lp-metric-item">
+                            <span class="lp-metric-value">24/7</span>
+                            <span class="lp-metric-label">Operational Readiness</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- 3. CORE CAPABILITY CARDS (6 HORIZONTAL CARDS) -->
+    <section class="lp-capabilities-section" id="lp-capabilities">
+        <div class="lp-container">
+            <div class="lp-capabilities-grid">
+                <!-- Card 1 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <div class="lp-cap-title">DOCUMENT INTELLIGENCE</div>
+                    <div class="lp-cap-sub">OCR &bull; VISION &bull; ANALYSIS</div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><circle cx="5" cy="18" r="2"/><line x1="12" y1="9" x2="12" y2="3"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="14.5" y1="10.5" x2="17.5" y2="7.5"/><line x1="9.5" y1="10.5" x2="6.5" y2="7.5"/><line x1="14.5" y1="13.5" x2="17.5" y2="16.5"/><line x1="9.5" y1="13.5" x2="6.5" y2="16.5"/></svg>
+                    </div>
+                    <div class="lp-cap-title">AGENT ORCHESTRATION</div>
+                    <div class="lp-cap-sub">PLAN &bull; EXECUTE &bull; VERIFY</div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    </div>
+                    <div class="lp-cap-title">KNOWLEDGE BASE</div>
+                    <div class="lp-cap-sub">RAG &bull; VECTOR SEARCH</div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    <div class="lp-cap-title">INDUSTRIAL TOOLS</div>
+                    <div class="lp-cap-sub">CODE &bull; CALCULATE &bull; SIMULATE</div>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    </div>
+                    <div class="lp-cap-title">SECURITY FIRST</div>
+                    <div class="lp-cap-sub">AUDIT &bull; DETECT &bull; PREVENT</div>
+                </div>
+
+                <!-- Card 6 -->
+                <div class="lp-cap-card">
+                    <div class="lp-cap-icon-wrap">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+                    </div>
+                    <div class="lp-cap-title">DEPLOY ANYWHERE</div>
+                    <div class="lp-cap-sub">ON-PREMISE &bull; AIR-GAP &bull; LOCAL</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. CRITICAL OPERATIONS & KEY ADVANTAGES (SPLIT SECTION) -->
+    <section class="lp-critical-section" id="lp-critical">
+        <div class="lp-container">
+            <div class="lp-critical-grid">
+                <!-- Left: Critical Operations Main Panel -->
+                <div class="lp-crit-main lp-bracket-box">
+                    <div class="lp-crit-photo-col">
+                        <img src="assets/industrial_engineer.jpg" alt="Industrial Engineer inspecting critical infrastructure" class="lp-crit-photo">
+                        <div class="lp-crit-photo-badge">KAVAAI INSPECTION</div>
+                    </div>
+
+                    <div class="lp-crit-details">
+                        <div class="lp-crit-header">
+                            <h2 class="lp-crit-title">BUILT FOR CRITICAL OPERATIONS</h2>
+                            <p class="lp-crit-subtext">
+                                Trusted by engineers, operators, and decision makers in high-stakes environments.
+                            </p>
+                        </div>
+
+                        <!-- 8 Industry Chips Grid -->
+                        <div class="lp-industries-grid">
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 20h20"/><path d="M6 20V8l6 4V8l6 4V4h2v16"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Manufacturing</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Energy &amp; Utilities</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2" ry="2"/><line x1="9" y1="22" x2="9" y2="22.01"/><line x1="15" y1="22" x2="15" y2="22.01"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Infrastructure</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Defense &amp; Security</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Aviation</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="2" x2="6" y2="22"/><line x1="18" y1="2" x2="18" y2="22"/><ellipse cx="12" cy="7" rx="6" ry="3"/><ellipse cx="12" cy="17" rx="6" ry="3"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Oil &amp; Gas</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="16" rx="2"/><path d="M4 11h16"/><path d="M12 3v8"/><path d="m8 19-2 3"/><path d="m18 22-2-3"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Rail &amp; Transport</span>
+                            </div>
+
+                            <div class="lp-industry-card">
+                                <div class="lp-ind-icon">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                                </div>
+                                <span class="lp-ind-name">Smart Cities</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Key Advantages Panel -->
+                <div class="lp-advantages-card lp-bracket-box" id="lp-advantages">
+                    <div class="lp-adv-header">
+                        <div class="lp-adv-title">KEY ADVANTAGES</div>
+                        <span class="lp-adv-tag">AIR-GAP READY</span>
+                    </div>
+
+                    <ul class="lp-adv-list">
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                            </span>
+                            <span>Runs on your infrastructure</span>
+                        </li>
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.61 16.95A5 5 0 0 0 18 10h-1.26a8 8 0 0 0-7.05-6M5 5l14 14"/><path d="M11 20H4a4 4 0 0 1-2.6-7"/></svg>
+                            </span>
+                            <span>No external AI APIs required</span>
+                        </li>
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </span>
+                            <span>Supports multimodal data (text, vision, code)</span>
+                        </li>
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            </span>
+                            <span>Designed for industrial use cases</span>
+                        </li>
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </span>
+                            <span>Air-gap ready architecture</span>
+                        </li>
+                        <li class="lp-adv-item">
+                            <span class="lp-adv-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="m9 14 2 2 4-4"/></svg>
+                            </span>
+                            <span>Full control and auditability</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. OUR TEAM SECTION -->
+    <section class="lp-team-section" id="lp-team">
+        <div class="lp-container">
+            <div class="lp-team-header-row">
+                <div class="lp-team-heading-col">
+                    <h2 class="lp-team-title">OUR TEAM</h2>
+                    <div class="lp-team-sub">Engineers. Researchers. Builders.</div>
+                    <p class="lp-team-desc">
+                        A multidisciplinary team passionate about building sovereign AI for real-world industrial impact.
+                    </p>
+                </div>
+                <div>
+                    <a href="#lp-team" class="lp-btn-team" id="lp-btn-meet-team">
+                        <span>Meet the Team &rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 6 Actual Team Members from Project -->
+            <div class="lp-team-grid">
+                <!-- Member 1: Vaishnav Kant (Team Leader) -->
+                <div class="lp-team-card" data-member="vaishnav-kant">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <img class="lp-avatar-img" src="assets/vaishnav_kant.jpg?v=2" alt="Vaishnav Kant">
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Vaishnav Kant</h3>
+                    <div class="lp-member-role">Team Leader</div>
+                    <p class="lp-member-resp">Systems &amp; Platform Lead</p>
+                </div>
+
+                <!-- Member 2: Kartik Verma -->
+                <div class="lp-team-card" data-member="kartik-verma">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <img class="lp-avatar-img" src="assets/kartik.jpg?v=2" alt="Kartik Verma">
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Kartik Verma</h3>
+                    <div class="lp-member-role">Backend &amp; AI</div>
+                    <p class="lp-member-resp">Architecture &amp; Pipelines</p>
+                </div>
+
+                <!-- Member 3: Krishna Kumar -->
+                <div class="lp-team-card" data-member="krishna-kumar">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <img class="lp-avatar-img" src="assets/krishna_kumar.jpg?v=2" alt="Krishna Kumar">
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Krishna Kumar</h3>
+                    <div class="lp-member-role">Frontend</div>
+                    <p class="lp-member-resp">UI &amp; Interaction Design</p>
+                </div>
+
+                <!-- Member 4: Aman Kumar -->
+                <div class="lp-team-card" data-member="aman-kumar">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <img class="lp-avatar-img" src="assets/aman.jpg?v=2" alt="Aman Kumar">
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Aman Kumar</h3>
+                    <div class="lp-member-role">UX and Data &amp; RAG</div>
+                    <p class="lp-member-resp">Knowledge &amp; UX Systems</p>
+                </div>
+
+                <!-- Member 5: Aastha Kumari -->
+                <div class="lp-team-card" data-member="aastha-kumari">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <span class="lp-avatar-initials">AK</span>
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Aastha Kumari</h3>
+                    <div class="lp-member-role">PPT &amp; Core Research</div>
+                    <p class="lp-member-resp">Research &amp; Documentation</p>
+                </div>
+
+                <!-- Member 6: Asmita Shukla -->
+                <div class="lp-team-card" data-member="asmita-shukla">
+                    <div class="lp-avatar-wrap">
+                        <div class="lp-avatar-ring"></div>
+                        <div class="lp-avatar-img-box">
+                            <span class="lp-avatar-initials">AS</span>
+                        </div>
+                    </div>
+                    <h3 class="lp-member-name">Asmita Shukla</h3>
+                    <div class="lp-member-role">Security &amp; Research</div>
+                    <p class="lp-member-resp">Infrastructure &amp; Audit</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. COMPACT TECHNICAL FOOTER -->
+    <footer class="lp-footer" id="lp-footer">
+        <div class="lp-container lp-footer-inner">
+            <!-- Left: Brand & Version -->
+            <div class="lp-footer-left">
+                <div class="lp-brand-emblem" style="width: 26px; height: 26px;">
+                    <span class="lp-brand-emblem-k" style="font-size: 14px;">K</span>
+                </div>
+                <div class="lp-brand-title" style="font-size: 13px;">KAVAAI <span>SOVEREIGN</span></div>
+                <span class="lp-footer-ver">v1.0.0 | Industrial AI Workbench</span>
+            </div>
+
+            <!-- Center: Links -->
+            <div class="lp-footer-links">
+                <a href="#lp-advantages" class="lp-footer-link">Privacy</a>
+                <a href="#lp-advantages" class="lp-footer-link">Terms</a>
+                <a href="#lp-capabilities" class="lp-footer-link">Documentation</a>
+                <a href="#lp-footer" class="lp-footer-link">Contact</a>
+            </div>
+
+            <!-- Right: Socials & Live System Status -->
+            <div class="lp-footer-right">
+                <div class="lp-footer-socials">
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="lp-social-icon" title="LinkedIn" aria-label="LinkedIn">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+                    </a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="lp-social-icon" title="GitHub" aria-label="GitHub">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"/></svg>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="lp-social-icon" title="YouTube" aria-label="YouTube">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+                    </a>
+                </div>
+
+                <div class="lp-status-pill">
+                    <span class="lp-status-dot" id="lp-system-status-dot"></span>
+                    <span id="lp-system-status-label">ALL SYSTEMS OPERATIONAL</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 7. INTERACTIVE DEMO INSPECTION SIMULATOR MODAL -->
+    <div class="lp-modal-backdrop" id="lp-demo-modal" role="dialog" aria-modal="true" aria-labelledby="lpDemoModalTitle">
+        <div class="lp-modal-box lp-bracket-box">
+            <div class="lp-modal-header">
+                <div class="lp-modal-title" id="lpDemoModalTitle">[ SYSTEM DEMO // MULTIMODAL VISION INSPECTION ]</div>
+                <button type="button" class="lp-modal-close" id="lp-btn-close-demo" aria-label="Close demo modal">&times;</button>
+            </div>
+            <div class="lp-modal-body">
+                <div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 20px; align-items: start;">
+                    <!-- Inspection Viewport with Anomaly Box -->
+                    <div style="position: relative; border-radius: 4px; overflow: hidden; border: 1px solid rgba(14, 165, 233, 0.4); background: #000;">
+                        <img src="machine101_inspection.png" alt="Machine 101 Inspection Feed" style="width: 100%; height: auto; display: block; filter: brightness(0.92);">
+                        <div id="lp-demo-anomaly-box" style="display: none; position: absolute; top: 16%; right: 4%; width: 26%; height: 42%; border: 2px solid #EF4444; background: rgba(239, 68, 68, 0.15); box-shadow: 0 0 16px rgba(239, 68, 68, 0.6); pointer-events: none;">
+                            <span style="position: absolute; top: -18px; right: 0; background: #EF4444; color: #FFF; font-family: var(--lp-font-mono); font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 2px;">96&deg;C CRITICAL</span>
+                        </div>
+                    </div>
+
+                    <!-- Live AI Reasoning Terminal -->
+                    <div style="display: flex; flex-direction: column; gap: 14px;">
+                        <div style="font-family: var(--lp-font-mono); font-size: 11px; color: #7DD3FC; background: rgba(3, 9, 16, 0.9); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: 4px; padding: 14px; height: 210px; overflow-y: auto; line-height: 1.6;" id="lp-demo-terminal">
+                            <div style="color: #7DD3FC;">[SYSTEM] Initializing Sovereign Multimodal Vision Engine...</div>
+                            <div style="color: #94A3B8;">[STREAM] Connected to Asset: ICU-101-A (Machine 101 Industrial Cooling Unit)</div>
+                            <div style="color: #F59E0B;">[READY] Click 'TRIGGER AUTONOMOUS AUDIT' below to initiate local inspection.</div>
+                        </div>
+
+                        <button type="button" class="lp-btn-primary" id="lp-btn-demo-step" style="width: 100%; padding: 10px 16px; font-size: 12px;">
+                            TRIGGER AUTONOMOUS AUDIT
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ======================================================================== -->
 <!-- KAVAAI SOVEREIGN — SECURE INDUSTRIAL AUTHENTICATION GATEWAY              -->
 <!-- ======================================================================== -->
-<section id="kavaai-auth-screen" aria-label="Operator Authentication Console">
+<section id="kavaai-auth-screen" class="auth-hidden" aria-label="Operator Authentication Console">
     <!-- Layered Technical Environment -->
     <div class="auth-bg-grid" aria-hidden="true"></div>
     <div class="auth-bg-radial-blue" aria-hidden="true"></div>
@@ -67,6 +605,14 @@
                     <span>NODE: KS-LOCAL-01</span>
                 </div>
                 <div>NETWORK: PRIVATE</div>
+            </div>
+
+            <!-- Return to Landing Page Link -->
+            <div style="display: flex; justify-content: flex-start; margin-bottom: 8px;">
+                <a href="/" class="auth-back-to-landing" data-route="/" title="Return to public overview">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    <span>&larr; BACK TO HOMEPAGE</span>
+                </a>
             </div>
 
             <!-- Brand Header -->
@@ -2554,7 +3100,8 @@ STATUS: WARNING (Conditional Operation Allowed)</div>
 
 <script src="config.js?v=1"></script>
 <script src="supabase-client.js?v=1"></script>
-<script src="auth.js?v=1"></script>
-<script src="app.js?v=58"></script>
+<script src="landing.js?v=2"></script>
+<script src="auth.js?v=2"></script>
+<script src="app.js?v=60"></script>
 </body>
 </html>
