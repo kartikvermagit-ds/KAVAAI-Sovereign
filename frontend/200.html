@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=60">
     <link rel="stylesheet" href="auth.css?v=2">
-    <link rel="stylesheet" href="landing.css?v=7">
+    <link rel="stylesheet" href="landing.css?v=9">
     <!-- Supabase JS Client (With multi-CDN fallback and offline air-gapped resilience) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -106,7 +106,7 @@
                     <span>SOVEREIGN AI. REAL IMPACT.</span>
                 </div>
 
-                <h1 class="lp-hero-title">
+                <h1 class="lp-hero-title" data-cursor="brand">
                     <span class="title-kavaai">KAVAAI</span>
                     <span class="title-sovereign">SOVEREIGN</span>
                 </h1>
@@ -180,6 +180,7 @@
                     <!-- 3D Digital Rotating Earth Canvas -->
                     <div class="lp-globe-viewport">
                         <canvas id="landing-globe-canvas"></canvas>
+                        <canvas id="landing-globe-overlay"></canvas>
                     </div>
 
                     <!-- 3 System Metrics (Positioning Principles) -->
@@ -3396,7 +3397,7 @@ STATUS: WARNING (Conditional Operation Allowed)</div>
 
 <script src="config.js?v=1"></script>
 <script src="supabase-client.js?v=1"></script>
-<script src="landing.js?v=2"></script>
+<script src="landing.js?v=3"></script>
 <script src="auth.js?v=2"></script>
 <script src="app.js?v=60"></script>
 </body>

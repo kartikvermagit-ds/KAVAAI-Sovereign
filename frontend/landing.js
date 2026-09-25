@@ -146,217 +146,388 @@
     window.KavaaiRouter = KavaaiRouter;
 
     // =========================================================================
-    // 2. 3D GLOWING EARTH CANVAS RENDERER
+    // 2. 3D REAL GREEN EARTH GLOBE RENDERER (WEBGL + VECTOR OVERLAY)
     // =========================================================================
     function initGlowingGlobe() {
         const canvas = document.getElementById('landing-globe-canvas');
         if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+        const overlay = document.getElementById('landing-globe-overlay');
 
         let width = canvas.clientWidth || 380;
         let height = canvas.clientHeight || 240;
-        const dpr = window.devicePixelRatio || 1;
-        canvas.width = width * dpr;
-        canvas.height = height * dpr;
-        ctx.scale(dpr, dpr);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-        let rotation = 0;
-        const radius = Math.min(width, height) * 0.44;
-        const centerX = width / 2;
-        const centerY = height / 2;
+        canvas.width = Math.floor(width * dpr);
+        canvas.height = Math.floor(height * dpr);
 
-        // Sample landmass coordinate clusters (lat, lon in degrees)
-        const continentPoints = [];
-        // North America & Europe & Asia & Australia & South America clusters
-        const seedClusters = [
-            { lat: 40, lon: -100, count: 24, spread: 22 }, // North America
-            { lat: -15, lon: -60, count: 20, spread: 18 },  // South America
-            { lat: 50, lon: 15, count: 32, spread: 20 },    // Europe
-            { lat: 10, lon: 20, count: 26, spread: 22 },    // Africa
-            { lat: 35, lon: 100, count: 42, spread: 28 },   // Asia
-            { lat: 22, lon: 78, count: 20, spread: 12 },    // India
-            { lat: -25, lon: 135, count: 18, spread: 16 }   // Australia
-        ];
-
-        seedClusters.forEach(cluster => {
-            for (let i = 0; i < cluster.count; i++) {
-                const lat = cluster.lat + (Math.random() - 0.5) * cluster.spread;
-                const lon = cluster.lon + (Math.random() - 0.5) * cluster.spread;
-                continentPoints.push({
-                    lat: (lat * Math.PI) / 180,
-                    lon: (lon * Math.PI) / 180,
-                    size: Math.random() * 2 + 1.2,
-                    isHub: Math.random() > 0.8
-                });
-            }
-        });
-
-        // Network Arcs between major industrial hubs
-        const arcs = [
-            { from: { lat: 0.7, lon: -1.7 }, to: { lat: 0.85, lon: 0.2 }, progress: 0 },
-            { from: { lat: 0.85, lon: 0.2 }, to: { lat: 0.38, lon: 1.36 }, progress: 0.3 },
-            { from: { lat: 0.38, lon: 1.36 }, to: { lat: 0.6, lon: 1.7 }, progress: 0.6 },
-            { from: { lat: 0.7, lon: -1.7 }, to: { lat: -0.4, lon: -1.0 }, progress: 0.2 }
-        ];
-
-        let animationId;
-
-        function render() {
-            ctx.clearRect(0, 0, width, height);
-
-            // 1. Draw outer ambient atmosphere glow
-            const atmosGlow = ctx.createRadialGradient(centerX, centerY, radius * 0.85, centerX, centerY, radius * 1.3);
-            atmosGlow.addColorStop(0, 'rgba(14, 165, 233, 0.25)');
-            atmosGlow.addColorStop(0.5, 'rgba(255, 157, 0, 0.12)');
-            atmosGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
-            ctx.fillStyle = atmosGlow;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius * 1.3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 2. Base Dark Sphere with 3D gradient
-            const sphereGrad = ctx.createRadialGradient(
-                centerX - radius * 0.35,
-                centerY - radius * 0.35,
-                radius * 0.1,
-                centerX,
-                centerY,
-                radius
-            );
-            sphereGrad.addColorStop(0, '#0f2942');
-            sphereGrad.addColorStop(0.5, '#081726');
-            sphereGrad.addColorStop(0.9, '#040b12');
-            sphereGrad.addColorStop(1, '#020508');
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-            ctx.fillStyle = sphereGrad;
-            ctx.fill();
-            ctx.strokeStyle = 'rgba(14, 165, 233, 0.4)';
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-            ctx.clip(); // Clip everything to the sphere
-
-            // 3. Draw Rotating Latitude & Longitude grid lines
-            ctx.strokeStyle = 'rgba(14, 165, 233, 0.14)';
-            ctx.lineWidth = 0.8;
-
-            // Latitudes
-            for (let latDeg = -60; latDeg <= 60; latDeg += 30) {
-                const latRad = (latDeg * Math.PI) / 180;
-                const y = centerY - radius * Math.sin(latRad);
-                const rLat = radius * Math.cos(latRad);
-                ctx.beginPath();
-                ctx.ellipse(centerX, y, rLat, rLat * 0.28, 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            // Longitudes
-            for (let i = 0; i < 6; i++) {
-                const lonAngle = rotation + (i * Math.PI) / 3;
-                const xOffset = Math.sin(lonAngle) * radius;
-                ctx.beginPath();
-                ctx.ellipse(centerX, centerY, Math.abs(xOffset), radius, 0, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            // 4. Draw Illuminated Continents & Sovereign Industrial Nodes
-            continentPoints.forEach(pt => {
-                const currLon = pt.lon + rotation;
-                const cosLat = Math.cos(pt.lat);
-                const sinLat = Math.sin(pt.lat);
-                const cosLon = Math.cos(currLon);
-                const sinLon = Math.sin(currLon);
-
-                // 3D projection: z is depth
-                const z = cosLat * cosLon;
-                if (z > 0) { // Only render points on the visible hemisphere
-                    const x = centerX + radius * cosLat * sinLon;
-                    const y = centerY - radius * sinLat;
-
-                    const opacity = Math.min(1, Math.max(0.15, z));
-
-                    if (pt.isHub) {
-                        // High-priority Sovereign Node: Glowing Amber
-                        ctx.fillStyle = `rgba(255, 157, 0, ${opacity * 0.95})`;
-                        ctx.shadowColor = '#FF9D00';
-                        ctx.shadowBlur = 8;
-                        ctx.beginPath();
-                        ctx.arc(x, y, pt.size * 1.5, 0, Math.PI * 2);
-                        ctx.fill();
-                        ctx.shadowBlur = 0;
-                    } else {
-                        // Cyan/Electric Blue node
-                        ctx.fillStyle = `rgba(125, 211, 252, ${opacity * 0.65})`;
-                        ctx.beginPath();
-                        ctx.arc(x, y, pt.size, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
-                }
-            });
-
-            // 5. Draw Dynamic Data Transmission Arcs
-            arcs.forEach(arc => {
-                arc.progress = (arc.progress + 0.005) % 1;
-                const currLonFrom = arc.from.lon + rotation;
-                const currLonTo = arc.to.lon + rotation;
-
-                const zFrom = Math.cos(arc.from.lat) * Math.cos(currLonFrom);
-                const zTo = Math.cos(arc.to.lat) * Math.cos(currLonTo);
-
-                if (zFrom > -0.2 && zTo > -0.2) {
-                    const x1 = centerX + radius * Math.cos(arc.from.lat) * Math.sin(currLonFrom);
-                    const y1 = centerY - radius * Math.sin(arc.from.lat);
-                    const x2 = centerX + radius * Math.cos(arc.to.lat) * Math.sin(currLonTo);
-                    const y2 = centerY - radius * Math.sin(arc.to.lat);
-
-                    const midX = (x1 + x2) / 2;
-                    const midY = (y1 + y2) / 2 - 25;
-
-                    ctx.strokeStyle = 'rgba(255, 157, 0, 0.4)';
-                    ctx.setLineDash([3, 4]);
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.quadraticCurveTo(midX, midY, x2, y2);
-                    ctx.stroke();
-                    ctx.setLineDash([]);
-
-                    // Travelling pulse packet
-                    const t = arc.progress;
-                    const px = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * midX + t * t * x2;
-                    const py = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * midY + t * t * y2;
-
-                    ctx.fillStyle = '#FFA827';
-                    ctx.shadowColor = '#FFA827';
-                    ctx.shadowBlur = 6;
-                    ctx.beginPath();
-                    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
-                }
-            });
-
-            ctx.restore();
-
-            rotation += 0.004; // Smooth realistic planetary spin
-            animationId = requestAnimationFrame(render);
+        if (overlay) {
+            overlay.width = Math.floor(width * dpr);
+            overlay.height = Math.floor(height * dpr);
         }
 
-        render();
+        const overlayCtx = overlay ? overlay.getContext('2d') : null;
+        if (overlayCtx) {
+            overlayCtx.scale(dpr, dpr);
+        }
 
-        // Responsive resize handler
+        // Global network nodes (Real geographic coordinates)
+        const networkNodes = [
+            { id: 'india', name: 'SOVEREIGN CORE', lat: 21.0, lon: 78.0, isCore: true },
+            { id: 'na_w', name: 'NORTH AMERICA', lat: 37.5, lon: -122.0, isCore: false },
+            { id: 'na_e', name: 'EAST INFRA', lat: 40.7, lon: -74.0, isCore: false },
+            { id: 'eu', name: 'EUROPE HUB', lat: 50.1, lon: 9.0, isCore: false },
+            { id: 'mideast', name: 'GULF ENERGY', lat: 25.2, lon: 55.3, isCore: false },
+            { id: 'eastasia', name: 'ASIA PACIFIC', lat: 35.6, lon: 139.7, isCore: false },
+            { id: 'seasia', name: 'ASEAN GRID', lat: 1.3, lon: 103.8, isCore: false }
+        ];
+
+        // Global network data packet arcs
+        const arcs = [
+            { from: 'india', to: 'mideast', progress: 0.1 },
+            { from: 'mideast', to: 'eu', progress: 0.4 },
+            { from: 'eu', to: 'na_e', progress: 0.7 },
+            { from: 'na_e', to: 'na_w', progress: 0.2 },
+            { from: 'india', to: 'seasia', progress: 0.5 },
+            { from: 'seasia', to: 'eastasia', progress: 0.85 }
+        ];
+
+        let rotation = 0.8; // Initial rotation showing Eurasia/India
+        let animationId;
+
+        // Try WebGL first for photorealistic 3D Earth
+        let gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
+        if (!gl) {
+            gl = canvas.getContext('experimental-webgl', { alpha: true, antialias: true, premultipliedAlpha: false });
+        }
+
+        if (gl) {
+            initWebGLGlobe(gl);
+        } else {
+            init2DFallbackGlobe();
+        }
+
+        function initWebGLGlobe(gl) {
+            const vsSource = `
+                attribute vec2 a_pos;
+                void main() {
+                    gl_Position = vec4(a_pos, 0.0, 1.0);
+                }
+            `;
+
+            const fsSource = `
+                precision mediump float;
+                uniform vec2 u_res;
+                uniform float u_rot;
+                uniform sampler2D u_tex;
+
+                void main() {
+                    float minDim = min(u_res.x, u_res.y);
+                    float r = minDim * 0.44;
+                    vec2 c = u_res * 0.5;
+                    vec2 p = (gl_FragCoord.xy - c) / r;
+                    float d2 = dot(p, p);
+
+                    if (d2 > 1.0) {
+                        float d = sqrt(d2);
+                        if (d < 1.25) {
+                            float glow = pow((1.25 - d) / 0.25, 2.2) * 0.45;
+                            gl_FragColor = vec4(0.08 * glow, 0.65 * glow, 0.95 * glow, glow);
+                        } else {
+                            gl_FragColor = vec4(0.0);
+                        }
+                        return;
+                    }
+
+                    float z = sqrt(max(0.0, 1.0 - d2));
+                    vec3 norm = vec3(p.x, p.y, z);
+
+                    // 23.4 degree axial tilt of Earth
+                    float ct = 0.9177;
+                    float st = 0.3971;
+                    vec3 t = vec3(norm.x, norm.y * ct - norm.z * st, norm.y * st + norm.z * ct);
+
+                    float lat = asin(clamp(t.y, -1.0, 1.0));
+                    float lon = atan(t.x, t.z) + u_rot;
+
+                    float pi = 3.14159265;
+                    float u = fract(lon / (2.0 * pi));
+                    float v = 0.5 - (lat / pi);
+
+                    vec4 tex = texture2D(u_tex, vec2(u, clamp(v, 0.002, 0.998)));
+
+                    // Sunlight from upper left
+                    vec3 light = normalize(vec3(-0.55, 0.45, 0.70));
+                    float diff = max(dot(norm, light), 0.0);
+                    float illumination = 0.28 + 0.72 * pow(diff, 0.85);
+
+                    // Specular highlight on ocean waters
+                    float isWater = max(0.0, tex.b - tex.g * 0.65);
+                    vec3 halfV = normalize(light + vec3(0.0, 0.0, 1.0));
+                    float spec = pow(max(dot(norm, halfV), 0.0), 22.0) * isWater * 0.45;
+
+                    // Atmosphere rim glow
+                    float rim = pow(1.0 - z, 2.4);
+                    vec3 atmosRim = vec3(0.12, 0.70, 0.95) * rim * 0.55;
+
+                    // Vibrant green land enhancement
+                    vec3 col = tex.rgb;
+                    if (col.g > col.b * 0.85) {
+                        col = vec3(col.r * 0.92, min(1.0, col.g * 1.15), col.b * 0.88);
+                    }
+
+                    vec3 finalCol = col * illumination + vec3(spec) + atmosRim;
+                    gl_FragColor = vec4(finalCol, 1.0);
+                }
+            `;
+
+            function createShader(gl, type, source) {
+                const s = gl.createShader(type);
+                gl.shaderSource(s, source);
+                gl.compileShader(s);
+                return s;
+            }
+
+            const vs = createShader(gl, gl.VERTEX_SHADER, vsSource);
+            const fs = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+            const prog = gl.createProgram();
+            gl.attachShader(prog, vs);
+            gl.attachShader(prog, fs);
+            gl.linkProgram(prog);
+            gl.useProgram(prog);
+
+            const posBuf = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, posBuf);
+            gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+                -1, -1,
+                 1, -1,
+                -1,  1,
+                -1,  1,
+                 1, -1,
+                 1,  1
+            ]), gl.STATIC_DRAW);
+
+            const aPos = gl.getAttribLocation(prog, 'a_pos');
+            gl.enableVertexAttribArray(aPos);
+            gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+            const uRes = gl.getUniformLocation(prog, 'u_res');
+            const uRot = gl.getUniformLocation(prog, 'u_rot');
+            const uTex = gl.getUniformLocation(prog, 'u_tex');
+
+            // Create initial placeholder texture
+            const texture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([
+                16, 55, 120, 255,   34, 139, 34, 255,
+                34, 139, 34, 255,   16, 55, 120, 255
+            ]));
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+
+            // Load high-resolution realistic green Earth map
+            const earthImg = new Image();
+            earthImg.onload = () => {
+                gl.bindTexture(gl.TEXTURE_2D, texture);
+                gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, earthImg);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+                gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+                gl.generateMipmap(gl.TEXTURE_2D);
+            };
+            earthImg.src = 'assets/earth_green.jpg';
+
+            gl.enable(gl.BLEND);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+            function loop() {
+                gl.viewport(0, 0, canvas.width, canvas.height);
+                gl.clearColor(0, 0, 0, 0);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+
+                gl.uniform2f(uRes, canvas.width, canvas.height);
+                gl.uniform1f(uRot, rotation);
+                gl.uniform1i(uTex, 0);
+
+                gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+                renderOverlays();
+
+                rotation += 0.0035;
+                animationId = requestAnimationFrame(loop);
+            }
+
+            loop();
+        }
+
+        // 3D coordinate projection with Earth's 23.4° tilt
+        function projectNode(latDeg, lonDeg) {
+            const lat = (latDeg * Math.PI) / 180;
+            const lon = (lonDeg * Math.PI) / 180 + rotation;
+
+            const cosLat = Math.cos(lat);
+            const sinLat = Math.sin(lat);
+            const cosLon = Math.cos(lon);
+            const sinLon = Math.sin(lon);
+
+            // Un-tilted coordinates on unit sphere
+            const sx = cosLat * sinLon;
+            const sy = sinLat;
+            const sz = cosLat * cosLon;
+
+            // Earth axial tilt (23.4 deg -> 0.409 rad)
+            const ct = 0.9177;
+            const st = 0.3971;
+            const px = sx;
+            const py = sy * ct - sz * st;
+            const pz = sy * st + sz * ct;
+
+            const radius = Math.min(width, height) * 0.44;
+            const cx = width / 2;
+            const cy = height / 2;
+
+            return {
+                x: cx + radius * px,
+                y: cy - radius * py,
+                z: pz,
+                visible: pz > 0.05
+            };
+        }
+
+        function renderOverlays() {
+            if (!overlayCtx) return;
+            overlayCtx.clearRect(0, 0, width, height);
+
+            const nodePos = {};
+            networkNodes.forEach(node => {
+                nodePos[node.id] = projectNode(node.lat, node.lon);
+            });
+
+            // Draw animated sovereign transmission arcs
+            arcs.forEach(arc => {
+                const p1 = nodePos[arc.from];
+                const p2 = nodePos[arc.to];
+                if (!p1 || !p2) return;
+
+                arc.progress = (arc.progress + 0.004) % 1;
+
+                if (p1.z > -0.15 && p2.z > -0.15) {
+                    const midX = (p1.x + p2.x) / 2;
+                    const midY = (p1.y + p2.y) / 2 - 20;
+
+                    const alpha = Math.min(1, Math.max(0.1, (p1.z + p2.z) * 0.7));
+
+                    overlayCtx.strokeStyle = `rgba(255, 157, 0, ${alpha * 0.45})`;
+                    overlayCtx.lineWidth = 1.2;
+                    overlayCtx.setLineDash([3, 4]);
+                    overlayCtx.beginPath();
+                    overlayCtx.moveTo(p1.x, p1.y);
+                    overlayCtx.quadraticCurveTo(midX, midY, p2.x, p2.y);
+                    overlayCtx.stroke();
+                    overlayCtx.setLineDash([]);
+
+                    // Travelling cyber pulse
+                    const t = arc.progress;
+                    const px = (1 - t) * (1 - t) * p1.x + 2 * (1 - t) * t * midX + t * t * p2.x;
+                    const py = (1 - t) * (1 - t) * p1.y + 2 * (1 - t) * t * midY + t * t * p2.y;
+
+                    overlayCtx.fillStyle = '#FFA827';
+                    overlayCtx.shadowColor = '#FFA827';
+                    overlayCtx.shadowBlur = 6;
+                    overlayCtx.beginPath();
+                    overlayCtx.arc(px, py, 2.5, 0, Math.PI * 2);
+                    overlayCtx.fill();
+                    overlayCtx.shadowBlur = 0;
+                }
+            });
+
+            // Draw glowing sovereign nodes
+            const time = Date.now() * 0.003;
+            networkNodes.forEach(node => {
+                const p = nodePos[node.id];
+                if (!p || !p.visible) return;
+
+                const alpha = Math.min(1, Math.max(0.2, p.z));
+
+                if (node.isCore) {
+                    // Pulsing amber sovereign core
+                    const pulse = 1 + 0.25 * Math.sin(time * 3);
+                    overlayCtx.strokeStyle = `rgba(255, 157, 0, ${alpha * 0.8})`;
+                    overlayCtx.lineWidth = 1.5;
+                    overlayCtx.beginPath();
+                    overlayCtx.arc(p.x, p.y, 6 * pulse, 0, Math.PI * 2);
+                    overlayCtx.stroke();
+
+                    overlayCtx.fillStyle = `rgba(255, 157, 0, ${alpha})`;
+                    overlayCtx.shadowColor = '#FF9D00';
+                    overlayCtx.shadowBlur = 10;
+                    overlayCtx.beginPath();
+                    overlayCtx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                    overlayCtx.fill();
+                    overlayCtx.shadowBlur = 0;
+                } else {
+                    // Electric cyan node
+                    overlayCtx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.9})`;
+                    overlayCtx.shadowColor = '#38BDF8';
+                    overlayCtx.shadowBlur = 6;
+                    overlayCtx.beginPath();
+                    overlayCtx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+                    overlayCtx.fill();
+                    overlayCtx.shadowBlur = 0;
+                }
+            });
+        }
+
+        function init2DFallbackGlobe() {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            ctx.scale(dpr, dpr);
+
+            function loop2D() {
+                ctx.clearRect(0, 0, width, height);
+                const cx = width / 2;
+                const cy = height / 2;
+                const r = Math.min(width, height) * 0.44;
+
+                // Deep ocean blue sphere
+                const grad = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r);
+                grad.addColorStop(0, '#125488');
+                grad.addColorStop(0.6, '#092542');
+                grad.addColorStop(1, '#030c17');
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.fillStyle = grad;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.restore();
+
+                renderOverlays();
+                rotation += 0.0035;
+                animationId = requestAnimationFrame(loop2D);
+            }
+            loop2D();
+        }
+
+        // Window resize handler
         window.addEventListener('resize', () => {
             const newW = canvas.clientWidth || 380;
             const newH = canvas.clientHeight || 240;
             if (newW !== width || newH !== height) {
                 width = newW;
                 height = newH;
-                canvas.width = width * dpr;
-                canvas.height = height * dpr;
-                ctx.scale(dpr, dpr);
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                if (overlay) {
+                    overlay.width = Math.floor(width * dpr);
+                    overlay.height = Math.floor(height * dpr);
+                    if (overlayCtx) overlayCtx.scale(dpr, dpr);
+                }
             }
         });
     }
@@ -530,6 +701,13 @@
                 if (route) KavaaiRouter.navigate(route);
             });
         });
+
+        // Interactive Golden Hover for Hero Title
+        const heroTitle = document.querySelector('.lp-hero-title');
+        if (heroTitle) {
+            heroTitle.addEventListener('mouseenter', () => heroTitle.classList.add('is-hovered'));
+            heroTitle.addEventListener('mouseleave', () => heroTitle.classList.remove('is-hovered'));
+        }
     });
 
 })();
